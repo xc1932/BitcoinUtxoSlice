@@ -117,7 +117,7 @@ namespace BlockchainTimeSliceProject
             ////7.测试系统partA执行情况
             Block_Processing_Class bpc = new Block_Processing_Class();
             bpc.run();
-            //123456
+
 
             ////8.测试区块文件中区块总数
             //Blockfile_Manager_Class bmc = new Blockfile_Manager_Class();
