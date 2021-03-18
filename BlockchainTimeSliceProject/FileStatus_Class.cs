@@ -11,7 +11,7 @@ namespace BlockchainTimeSliceProject
         int unusedBlocks { get; set; }
         bool readStatus = false;
         int[] blockStatusArray { get; set; }
-
+        //123
         public FileStatus_Class() { 
         }
 
