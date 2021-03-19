@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlockchainTimeSliceProject
+namespace BitcoinUtxoSlice
 {
     class Configuration_Class
     {

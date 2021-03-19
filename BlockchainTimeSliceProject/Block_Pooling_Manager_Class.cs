@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace BlockchainTimeSliceProject
+namespace BitcoinUtxoSlice
 {
     class Block_Pooling_Manager_Class
     {
         public List<Block> blockReadBlocksFromFile = new List<Block>();
         public Queue<Block> blockQueuePooling = new Queue<Block>();
+        public List<FileStatus_Class> fileStatusList = new List<FileStatus_Class>();
         public Block blockQueueTailElement;
         int blockReadPointer = 0;
         int currentLoadFileNumber = -1;
@@ -36,6 +37,8 @@ namespace BlockchainTimeSliceProject
             string loadFilePath = @"E:\Code\BlockFile\blk" + currentLoadFileNumber;
             if (Directory.Exists(loadFilePath)) {
                 List<Block> newlyReadBlocksFromFile = blockFileManager.load_one_blockfile(loadFilePath);
+                string fileName = "blk"+ currentLoadFileNumber;
+                add_FileStatusObject_ToFileStatusList(fileName, newlyReadBlocksFromFile.Count);
                 blockReadBlocksFromFile.AddRange(blockFileManager.load_one_blockfile(loadFilePath));
                 searchBlockLoadFileAmount++;
             }  
@@ -122,6 +125,7 @@ namespace BlockchainTimeSliceProject
                     if (blockReadBlocksFromFile[i]!=null) {
                         if (blockReadBlocksFromFile[i].BlockHeader.BlockHash==dequeueBlock.BlockHeader.BlockHash) {
                             blockReadBlocksFromFile[i] = null;
+                            update_FileStatus_ForFileStatusList(i);
                             return dequeueBlock;
                         }
                     }
@@ -133,6 +137,7 @@ namespace BlockchainTimeSliceProject
                         if (blockReadBlocksFromFile[j].BlockHeader.BlockHash == dequeueBlock.BlockHeader.BlockHash)
                         {
                             blockReadBlocksFromFile[j] = null;
+                            update_FileStatus_ForFileStatusList(j);
                             return dequeueBlock;
                         }
                     }
@@ -176,5 +181,31 @@ namespace BlockchainTimeSliceProject
             }
             return true;
         }
+
+        //7.向文件状态列表中添加文件状态
+        public void add_FileStatusObject_ToFileStatusList(string fileName, int totalBlocks)
+        {
+            FileStatus_Class fileStatusItem = new FileStatus_Class(fileName, totalBlocks);
+            fileStatusList.Add(fileStatusItem);
+        }
+
+        //8.更新文件状态列表中文件的状态
+        public void update_FileStatus_ForFileStatusList(int indexOfBlockAtBlockReadBlocksFromFile) {
+            int indexAtBlockFile = indexOfBlockAtBlockReadBlocksFromFile+1;
+            for (int i=0;i< fileStatusList.Count;i++) {
+                if (indexAtBlockFile > fileStatusList[i].totalBlocks)
+                {
+                    indexAtBlockFile -= fileStatusList[i].totalBlocks;
+                }
+                else {
+                    fileStatusList[i].unusedBlocks--;
+                    fileStatusList[i].blockStatusArray[indexAtBlockFile-1]=1;//1为已经使用了
+                    break;
+                }
+
+            }
+        }
+
+
     }
 }

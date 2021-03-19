@@ -7,7 +7,7 @@ using BitcoinBlockchain.Parser;
 using System.Linq;
 using System.Diagnostics;
 
-namespace BlockchainTimeSliceProject
+namespace BitcoinUtxoSlice
 {
     class Blockfile_Manager_Class
     {

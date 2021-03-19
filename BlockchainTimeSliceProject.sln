@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockchainTimeSliceProject", "BlockchainTimeSliceProject\BlockchainTimeSliceProject.csproj", "{191890F2-62CF-4453-B2F2-8326CAE4EF2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitcoinUtxoSlice", "BlockchainTimeSliceProject\BitcoinUtxoSlice.csproj", "{191890F2-62CF-4453-B2F2-8326CAE4EF2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

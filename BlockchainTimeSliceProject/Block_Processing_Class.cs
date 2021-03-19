@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace BlockchainTimeSliceProject
+namespace BitcoinUtxoSlice
 {
     class Block_Processing_Class
     {
