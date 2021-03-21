@@ -123,7 +123,7 @@ namespace BitcoinUtxoSlice
             //Blockfile_Manager_Class bmc = new Blockfile_Manager_Class();
             //Console.WriteLine(bmc.calculate_AmountOfBlockFiles(50));
 
-            ////9.测试文件状态存储功能
+            ////9.测试文件状态存储功能123
             //Block_Pooling_Manager_Class bpmc = new Block_Pooling_Manager_Class();
             //bpmc.load_NextFile_ToBlockPooling();
             //Console.WriteLine(bpmc.fileStatusList.Count);

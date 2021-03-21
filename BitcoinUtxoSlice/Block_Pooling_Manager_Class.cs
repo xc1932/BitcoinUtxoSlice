@@ -14,7 +14,6 @@ namespace BitcoinUtxoSlice
         public Block blockQueueTailElement;
         int blockReadPointer = 0;
         int currentLoadFileNumber = -1;
-        int searchBlockLoadFileAmount = 0;
 
         //1.使用blk00000.dat初始化newlyReadBlocksFromFile中的区块
         public void initialize_NewlyReadBlocksFromFile()
@@ -25,7 +24,6 @@ namespace BitcoinUtxoSlice
                 currentLoadFileNumber++;
                 string loadFilePath = @"E:\Code\BlockFile\blk" + currentLoadFileNumber;
                 blockReadBlocksFromFile = blockFileManager.load_one_blockfile(loadFilePath);
-                searchBlockLoadFileAmount++;
             }
         }
 
@@ -40,7 +38,6 @@ namespace BitcoinUtxoSlice
                 string fileName = "blk"+ currentLoadFileNumber;
                 add_FileStatusObject_ToFileStatusList(fileName, newlyReadBlocksFromFile.Count);
                 blockReadBlocksFromFile.AddRange(blockFileManager.load_one_blockfile(loadFilePath));
-                searchBlockLoadFileAmount++;
             }  
         }
 
