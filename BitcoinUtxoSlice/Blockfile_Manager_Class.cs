@@ -98,7 +98,7 @@ namespace BitcoinUtxoSlice
             return oneFileBlockData;
         }
 
-        //3.测试文件中的区块总数(无需使用)
+        //3.测试文件中的区块总数(未使用)
         public int calculate_AmountOfBlockFiles(int blockFileAmount) {
             int amountOfBlockFiles = 0;
             Stopwatch timer = new Stopwatch();

@@ -8,7 +8,11 @@ namespace BitcoinUtxoSlice
 {
     class Block_Processing_Class
     {
-        public void run() {
+        Blockfile_Manager_Class blockfileManagerObject = new Blockfile_Manager_Class();
+        public int processedBlockAmount = 0;
+        public int sliceFileAmount = 0;
+
+        public void initial_Run() {
             //获取创世块
             Blockfile_Manager_Class bmc = new Blockfile_Manager_Class();
             string loadFilePath = @"E:\Code\BlockFile\blk0";
@@ -38,6 +42,7 @@ namespace BitcoinUtxoSlice
             Console.WriteLine("解析50个文件总用时:"+timer.Elapsed);
         }
 
+        //处理测试
         public void virtual_BlockProcessing(Block readyBlock,int processedBlockAmount) {
             Console.WriteLine("正在处理第"+ processedBlockAmount + "个区块..............");
             Console.WriteLine("前一个区块hash:" + readyBlock.BlockHeader.PreviousBlockHash);

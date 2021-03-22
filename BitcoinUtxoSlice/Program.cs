@@ -140,48 +140,48 @@ namespace BitcoinUtxoSlice
             //Console.WriteLine(bpmc.fileStatusList[1].readStatus);
             //Console.WriteLine(bpmc.fileStatusList[1].blockStatusArray.Length);
 
-            //10.测试更新文件状态列表的功能
-            Block_Pooling_Manager_Class bpmc = new Block_Pooling_Manager_Class();
-            Blockfile_Manager_Class bmc = new Blockfile_Manager_Class();
-            string loadFilePath = @"E:\Code\BlockFile\blk0";
-            List<Block> blockList = bmc.load_one_blockfile(loadFilePath);
-            Block genesisBlock = blockList[0];
-            Console.WriteLine("创世区块前一个区块hash:" + genesisBlock.BlockHeader.PreviousBlockHash);
-            Console.WriteLine("创世区块time:" + genesisBlock.BlockHeader.BlockTimestamp);
-            Console.WriteLine("创世区块hash:" + genesisBlock.BlockHeader.BlockHash);
-            Console.WriteLine("**********************************************************");
-            bpmc.initialize_BlockQueuePooling(genesisBlock);
-            for (int i = 0; i < 150000; i++)
-            {
-                bpmc.dequeue_FromBlockQueuePooling();
-                bpmc.enqueue_ToBlockQueuePooling();
-                if (i % 100 == 0)
-                {
-                    Console.WriteLine("第" + i + "次循环");
-                }
-            }
-            for (int i = 0; i < 500; i++)
-            {
-                bpmc.dequeue_FromBlockQueuePooling();
-                bpmc.enqueue_ToBlockQueuePooling();
-                if (i % 100 == 0)
-                {
-                    Console.WriteLine("第" + i + "次循环");
-                }
-            }
-            for (int j = 0; j < bpmc.fileStatusList.Count; j++)
-            {
-                Console.WriteLine(bpmc.fileStatusList[j].fileName);
-                Console.WriteLine(bpmc.fileStatusList[j].totalBlocks);
-                Console.WriteLine(bpmc.fileStatusList[j].unusedBlocks);
-                Console.WriteLine(bpmc.fileStatusList[j].readStatus);
-                Console.WriteLine(bpmc.fileStatusList[j].blockStatusArray.Length);
-                Console.WriteLine("-----------------------");
-            }
-            for (int k = 0; k < 1000; k++)
-            {
-                Console.WriteLine(bpmc.fileStatusList[0].blockStatusArray[k]);
-            }
+            //10.测试更新文件状态列表的功能(放弃)
+            //Block_Pooling_Manager_Class bpmc = new Block_Pooling_Manager_Class();
+            //Blockfile_Manager_Class bmc = new Blockfile_Manager_Class();
+            //string loadFilePath = @"E:\Code\BlockFile\blk0";
+            //List<Block> blockList = bmc.load_one_blockfile(loadFilePath);
+            //Block genesisBlock = blockList[0];
+            //Console.WriteLine("创世区块前一个区块hash:" + genesisBlock.BlockHeader.PreviousBlockHash);
+            //Console.WriteLine("创世区块time:" + genesisBlock.BlockHeader.BlockTimestamp);
+            //Console.WriteLine("创世区块hash:" + genesisBlock.BlockHeader.BlockHash);
+            //Console.WriteLine("**********************************************************");
+            //bpmc.initialize_BlockQueuePooling(genesisBlock);
+            //for (int i = 0; i < 150000; i++)
+            //{
+            //    bpmc.dequeue_FromBlockQueuePooling();
+            //    bpmc.enqueue_ToBlockQueuePooling();
+            //    if (i % 100 == 0)
+            //    {
+            //        Console.WriteLine("第" + i + "次循环");
+            //    }
+            //}
+            //for (int i = 0; i < 500; i++)
+            //{
+            //    bpmc.dequeue_FromBlockQueuePooling();
+            //    bpmc.enqueue_ToBlockQueuePooling();
+            //    if (i % 100 == 0)
+            //    {
+            //        Console.WriteLine("第" + i + "次循环");
+            //    }
+            //}
+            //for (int j = 0; j < bpmc.fileStatusList.Count; j++)
+            //{
+            //    Console.WriteLine(bpmc.fileStatusList[j].fileName);
+            //    Console.WriteLine(bpmc.fileStatusList[j].totalBlocks);
+            //    Console.WriteLine(bpmc.fileStatusList[j].unusedBlocks);
+            //    Console.WriteLine(bpmc.fileStatusList[j].readStatus);
+            //    Console.WriteLine(bpmc.fileStatusList[j].blockStatusArray.Length);
+            //    Console.WriteLine("-----------------------");
+            //}
+            //for (int k = 0; k < 1000; k++)
+            //{
+            //    Console.WriteLine(bpmc.fileStatusList[0].blockStatusArray[k]);
+            //}
 
 
 
