@@ -10,11 +10,13 @@ namespace BitcoinUtxoSlice
     {
         public List<Block> blockReadBlocksFromFile = new List<Block>();
         public Queue<Block> blockQueuePooling = new Queue<Block>();
+        public List<string> forkedBlockList = new List<string>();
+        public List<string> orphanBlockList = new List<string>();
         public List<int> blockCountOfFile = new List<int>();
         public Block blockQueueTailElement;
         public Block lastProcessedBlockElement;
-        int blockReadPointer = 0;
-        int currentLoadFileNumber = -1;
+        public int blockReadPointer = 0;
+        public int currentLoadFileNumber = -1;
 
         //1.使用blk00000.dat初始化newlyReadBlocksFromFile中的区块
         public void initialize_NewlyReadBlocksFromFile()
@@ -44,7 +46,7 @@ namespace BitcoinUtxoSlice
             }
         }
 
-        //3.从区块池中查找下一个区块
+        //3.从区块池中查找下一个区块(正在修改.....)
         public bool search_NextBlock(Block priorBlock, out Block nextBlock)
         {
             for (int i = blockReadPointer; i < blockReadBlocksFromFile.Count; i++)
@@ -53,9 +55,15 @@ namespace BitcoinUtxoSlice
                 {
                     if (priorBlock.BlockHeader.BlockHash == blockReadBlocksFromFile[i].BlockHeader.PreviousBlockHash)
                     {
-                        nextBlock = blockReadBlocksFromFile[i];
-                        blockReadPointer = i;
-                        return true;
+                        if (!forkedBlockList.Contains(blockReadBlocksFromFile[i].BlockHeader.BlockHash.ToString()))//排除分叉块
+                        {
+                            if (!orphanBlockList.Contains(blockReadBlocksFromFile[i].BlockHeader.BlockHash.ToString()))//排除孤块
+                            {
+                                nextBlock = blockReadBlocksFromFile[i];
+                                blockReadPointer = i;
+                                return true;
+                            }
+                        }
                     }
                 }
             }
@@ -67,9 +75,15 @@ namespace BitcoinUtxoSlice
                     {
                         if (priorBlock.BlockHeader.BlockHash == blockReadBlocksFromFile[j].BlockHeader.PreviousBlockHash)
                         {
-                            nextBlock = blockReadBlocksFromFile[j];
-                            blockReadPointer = j;
-                            return true;
+                            if (!forkedBlockList.Contains(blockReadBlocksFromFile[j].BlockHeader.BlockHash.ToString()))
+                            {
+                                if (!orphanBlockList.Contains(blockReadBlocksFromFile[j].BlockHeader.BlockHash.ToString()))
+                                {
+                                    nextBlock = blockReadBlocksFromFile[j];
+                                    blockReadPointer = j;
+                                    return true;
+                                }
+                            }
                         }
                     }
                 }
@@ -88,9 +102,15 @@ namespace BitcoinUtxoSlice
                         {
                             if (priorBlock.BlockHeader.BlockHash == blockReadBlocksFromFile[k].BlockHeader.PreviousBlockHash)
                             {
-                                nextBlock = blockReadBlocksFromFile[k];
-                                blockReadPointer = k;
-                                return true;
+                                if (!forkedBlockList.Contains(blockReadBlocksFromFile[k].BlockHeader.BlockHash.ToString()))
+                                {
+                                    if (!orphanBlockList.Contains(blockReadBlocksFromFile[k].BlockHeader.BlockHash.ToString()))
+                                    {
+                                        nextBlock = blockReadBlocksFromFile[k];
+                                        blockReadPointer = k;
+                                        return true;
+                                    }
+                                }
                             }
                         }
                     }
@@ -126,14 +146,19 @@ namespace BitcoinUtxoSlice
         }
 
         //5.从区块队列池中取出一个区块
-        public Block dequeue_FromBlockQueuePooling() {
+        public Block dequeue_FromBlockQueuePooling()
+        {
             Block dequeueBlock = null;
-            if(blockQueuePooling.Count!=0){
+            if (blockQueuePooling.Count != 0)
+            {
                 dequeueBlock = blockQueuePooling.Dequeue();
-                for(int i=0;i< blockReadPointer;i++)
+                lastProcessedBlockElement = dequeueBlock;
+                for (int i = 0; i < blockReadPointer; i++)
                 {
-                    if (blockReadBlocksFromFile[i]!=null) {
-                        if (blockReadBlocksFromFile[i].BlockHeader.BlockHash==dequeueBlock.BlockHeader.BlockHash) {
+                    if (blockReadBlocksFromFile[i] != null)
+                    {
+                        if (blockReadBlocksFromFile[i].BlockHeader.BlockHash == dequeueBlock.BlockHeader.BlockHash)
+                        {
                             blockReadBlocksFromFile[i] = null;
                             return dequeueBlock;
                         }
@@ -154,7 +179,7 @@ namespace BitcoinUtxoSlice
             return dequeueBlock;
         }
 
-        //6.向区块队列中补充区块
+        //6.向区块队列中补充区块(正在修改.....)
         public bool enqueue_ToBlockQueuePooling()
         {
             int invalidBlockCount = 0;
@@ -175,6 +200,7 @@ namespace BitcoinUtxoSlice
                     {
                         tempBlockQueuePooling.Enqueue(blockQueuePooling.Dequeue());
                     }
+                    forkedBlockList.Add(blockQueuePooling.Dequeue().BlockHeader.BlockHash.ToString());//向分叉块列表中添加分叉上的块
                     blockQueuePooling.Clear();
                     for (int j = 0; j < tempBlockQueuePooling.Count; j++)
                     {
