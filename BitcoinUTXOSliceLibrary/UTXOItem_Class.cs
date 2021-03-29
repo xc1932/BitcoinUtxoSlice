@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BitcoinUtxoSlice
+namespace BitcoinUTXOSliceLibrary
 {
     public class UTXOItem_Class
     {

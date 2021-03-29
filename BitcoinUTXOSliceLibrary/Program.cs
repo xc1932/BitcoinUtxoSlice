@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace BitcoinUtxoSlice
+namespace BitcoinUTXOSliceLibrary
 {
     class Program
     {

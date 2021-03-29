@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BitcoinUtxoSlice
+namespace BitcoinUTXOSliceLibrary
 {
     public class Test_Class
     {
@@ -25,16 +25,18 @@ namespace BitcoinUtxoSlice
                     {
                         Console.WriteLine("txhash:" + tx.TransactionHash);
                         Console.WriteLine("**********输入节点:**********");
-                        if (tx.Inputs.Count!=0) {
+                        if (tx.Inputs.Count != 0)
+                        {
                             foreach (TransactionInput txi in tx.Inputs)
                             {
-                                Console.WriteLine("原交易hash"+txi.SourceTransactionHash);
-                                Console.WriteLine("索引:"+txi.SourceTransactionOutputIndex);
-                                Console.WriteLine("输入脚本:"+txi.InputScript);
+                                Console.WriteLine("原交易hash" + txi.SourceTransactionHash);
+                                Console.WriteLine("索引:" + txi.SourceTransactionOutputIndex);
+                                Console.WriteLine("输入脚本:" + txi.InputScript);
                             }
                         }
                         Console.WriteLine("**********输出节点:**********");
-                        if (tx.Outputs.Count!=0) {
+                        if (tx.Outputs.Count != 0)
+                        {
                             foreach (TransactionOutput txo in tx.Outputs)
                             {
                                 Console.WriteLine("value:" + txo.OutputValueSatoshi);

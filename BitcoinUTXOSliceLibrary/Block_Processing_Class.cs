@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace BitcoinUtxoSlice
+namespace BitcoinUTXOSliceLibrary
 {
     public class Block_Processing_Class
     {
@@ -278,7 +278,7 @@ namespace BitcoinUtxoSlice
             {
                 if (fileInfo.Name.EndsWith(".txt"))
                 {
-                    string blockHeight = fileInfo.Name.Split("_")[0];
+                    string blockHeight = fileInfo.Name.Split('_')[0];
                     if (Regex.IsMatch(blockHeight, @"^\d+$"))
                     {
                         int height = Convert.ToInt32(blockHeight);
@@ -524,7 +524,5 @@ namespace BitcoinUtxoSlice
             Console.WriteLine("区块hash:" + readyBlock.BlockHeader.BlockHash);
             Console.WriteLine("----------------------------------------------------------------------");
         }
-
-
     }
 }

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
-namespace BitcoinUtxoSlice
+namespace BitcoinUTXOSliceLibrary
 {
     public class Blockfile_Manager_Class
     {
@@ -40,7 +40,8 @@ namespace BitcoinUtxoSlice
                 Console.WriteLine("区块分装文件夹源路径不存在");
                 Directory.CreateDirectory(blockFileDestinationPath);
             }
-            else {
+            else
+            {
                 for (int i = 0; i < blockfileNumber; i++)
                 {
                     string destinationPathSubfolder = Path.Combine(blockFileDestinationPath, "blk" + i);
@@ -60,7 +61,7 @@ namespace BitcoinUtxoSlice
                     }
                 }
                 Console.WriteLine("文件处理结束................");
-            }            
+            }
         }
 
         //2.增量分装区块链文件
@@ -205,11 +206,11 @@ namespace BitcoinUtxoSlice
         public void get_totalcount()
         {
             string recordStr = File.ReadAllText(blockFileDestinationPath + "\\blockFileCount.txt");
-            string[] recordsList = recordStr.Split("|");
+            string[] recordsList = recordStr.Split('|');
             int totalBlock = 0;
             for (int i = 0; i < recordsList.Length - 1; i++)
             {
-                string[] recordItem = recordsList[i].Split("_");
+                string[] recordItem = recordsList[i].Split('_');
                 string fileName = recordItem[0];
                 int blockAmount = Convert.ToInt32(recordItem[1]);
                 totalBlock += blockAmount;
@@ -222,11 +223,11 @@ namespace BitcoinUtxoSlice
         public bool get_lastrecord_foldernumber(out int folderNumber)
         {
             string recordStr = File.ReadAllText(blockFileDestinationPath + "\\blockFileCount.txt");
-            string[] recordsList = recordStr.Split("|");
+            string[] recordsList = recordStr.Split('|');
             if (recordsList.Length != 0)
             {
                 string recordItem = recordsList[recordsList.Length - 2];
-                string folderName = recordItem.Split("_")[0];
+                string folderName = recordItem.Split('_')[0];
                 folderNumber = Convert.ToInt32(folderName.Substring(3, folderName.Length - 3));
                 return true;
             }

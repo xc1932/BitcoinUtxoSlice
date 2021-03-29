@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BitcoinUtxoSlice\BitcoinUTXOSlice.csproj" />
+    <ProjectReference Include="..\BitcoinUTXOSliceLibrary\BitcoinUTXOSliceLibrary.csproj" />
   </ItemGroup>
 
 </Project>

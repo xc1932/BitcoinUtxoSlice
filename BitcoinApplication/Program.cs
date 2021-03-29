@@ -1,5 +1,6 @@
 ﻿using System;
-using BitcoinUtxoSlice;
+//using BitcoinUtxoSlice;
+using BitcoinUTXOSliceLibrary;
 
 namespace BitcoinApplication
 {
@@ -8,9 +9,9 @@ namespace BitcoinApplication
         static void Main(string[] args)
         {
             ////I.文件预处理
-            //Blockfile_Manager_Class bmc = new Blockfile_Manager_Class();
+            Blockfile_Manager_Class bmc = new Blockfile_Manager_Class();
             //1.给出需要分装的文**数量**
-            //bmc.blockfiles_preprocessing(50);
+            //bmc.blockfiles_preprocessing(30);
             //2.给出分装的**最大文件编号**
             //bmc.blockfiles_preprocessing_increment(50);
             //3.初次或重新统计每个文件中的区块数量

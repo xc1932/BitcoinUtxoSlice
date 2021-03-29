@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace BitcoinUtxoSlice
+namespace BitcoinUTXOSliceLibrary
 {
     public class Block_Pooling_Manager_Class
     {
@@ -224,6 +224,5 @@ namespace BitcoinUtxoSlice
             }
             return true;
         }
-
     }
 }
