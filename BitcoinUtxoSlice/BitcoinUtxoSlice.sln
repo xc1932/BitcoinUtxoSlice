@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitcoinUtxoSlice", "BitcoinUtxoSlice.csproj", "{14B49190-52DC-4E2E-AE1B-0C4E21DF8C5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitcoinUTXOSlice", "BitcoinUTXOSlice.csproj", "{14B49190-52DC-4E2E-AE1B-0C4E21DF8C5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitcoinApplication", "..\BitcoinApplication\BitcoinApplication.csproj", "{9E49B5A7-51C8-42F7-B20B-986665B1429E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{14B49190-52DC-4E2E-AE1B-0C4E21DF8C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14B49190-52DC-4E2E-AE1B-0C4E21DF8C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14B49190-52DC-4E2E-AE1B-0C4E21DF8C5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E49B5A7-51C8-42F7-B20B-986665B1429E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E49B5A7-51C8-42F7-B20B-986665B1429E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E49B5A7-51C8-42F7-B20B-986665B1429E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E49B5A7-51C8-42F7-B20B-986665B1429E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

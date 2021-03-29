@@ -1,9 +1,7 @@
-﻿using BitcoinBlockchain.Data;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
+using BitcoinUtxoSlice;
 
-namespace BitcoinUtxoSlice
+namespace BitcoinApplication
 {
     class Program
     {
@@ -23,14 +21,9 @@ namespace BitcoinUtxoSlice
             //bmc.get_totalcount();
 
             ////II.初次运行和增量处理
-            //Block_Processing_Class bpc = new Block_Processing_Class();
+            Block_Processing_Class bpc = new Block_Processing_Class();
             //bpc.initial_Run();
-            //bpc.restart();
-
-            ////III.测试
-            //Test_Class tc = new Test_Class();
-            //tc.sameTransaction_Test();
-
+            bpc.restart();
 
         }
     }

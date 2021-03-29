@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BitcoinUtxoSlice
 {
-    class SliceFileItem_Class
+    public class SliceFileItem_Class
     {
         //Disposable
         // To detect redundant calls
@@ -25,12 +25,13 @@ namespace BitcoinUtxoSlice
         public int currentLoadFileNumber;
         public int processedBlockAmount;
         public int sliceFileAmount;
+        public int sameTransactionCount;
 
         public SliceFileItem_Class() { }
 
         public SliceFileItem_Class(List<FileStatusItem_Class> fileStatusList, Dictionary<string, UTXOItem_Class> utxoDictionary,
             List<string> forkedBlockList, List<string> orphanBlockList, string lastProcessedBlockHash, int blockReadPointer,
-            int currentLoadFileNumber, int processedBlockAmount, int sliceFileAmount)
+            int currentLoadFileNumber, int processedBlockAmount, int sliceFileAmount, int sameTransactionCount)
         {
             this.fileStatusList = fileStatusList;
             this.utxoDictionary = utxoDictionary;
@@ -41,6 +42,7 @@ namespace BitcoinUtxoSlice
             this.currentLoadFileNumber = currentLoadFileNumber;
             this.processedBlockAmount = processedBlockAmount;
             this.sliceFileAmount = sliceFileAmount;
+            this.sameTransactionCount = sameTransactionCount;
         }
 
         //Disposable Method

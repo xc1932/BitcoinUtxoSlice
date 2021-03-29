@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BitcoinUtxoSlice
 {
-    class FileStatusItem_Class
+    public class FileStatusItem_Class
     {
         public string fileName;
         public int totalBlocks;

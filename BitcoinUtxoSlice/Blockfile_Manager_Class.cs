@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace BitcoinUtxoSlice
 {
-    class Blockfile_Manager_Class
+    public class Blockfile_Manager_Class
     {
         public string blockFileSourcePath { get; set; }
         public string blockFileDestinationPath { get; set; }
@@ -33,30 +33,34 @@ namespace BitcoinUtxoSlice
             if (!Directory.Exists(blockFileSourcePath))
             {
                 Console.WriteLine("区块文件夹源路径不存在");
+                Directory.CreateDirectory(blockFileSourcePath);
             }
             if (!Directory.Exists(blockFileDestinationPath))
             {
+                Console.WriteLine("区块分装文件夹源路径不存在");
                 Directory.CreateDirectory(blockFileDestinationPath);
             }
-            for (int i = 0; i < blockfileNumber; i++)
-            {
-                string destinationPathSubfolder = Path.Combine(blockFileDestinationPath, "blk" + i);
-                if (!Directory.Exists(destinationPathSubfolder))
+            else {
+                for (int i = 0; i < blockfileNumber; i++)
                 {
-                    Directory.CreateDirectory(destinationPathSubfolder);
-                }
-                string fileName = get_filename(i);
-                if (fileName != null)
-                {
-                    string sourceFileName = Path.Combine(blockFileSourcePath, fileName);
-                    string destnationFileName = Path.Combine(destinationPathSubfolder, "blk00000.dat");
-                    if (File.Exists(sourceFileName))
+                    string destinationPathSubfolder = Path.Combine(blockFileDestinationPath, "blk" + i);
+                    if (!Directory.Exists(destinationPathSubfolder))
                     {
-                        File.Copy(sourceFileName, destnationFileName, true);
+                        Directory.CreateDirectory(destinationPathSubfolder);
+                    }
+                    string fileName = get_filename(i);
+                    if (fileName != null)
+                    {
+                        string sourceFileName = Path.Combine(blockFileSourcePath, fileName);
+                        string destnationFileName = Path.Combine(destinationPathSubfolder, "blk00000.dat");
+                        if (File.Exists(sourceFileName))
+                        {
+                            File.Copy(sourceFileName, destnationFileName, true);
+                        }
                     }
                 }
-            }
-            Console.WriteLine("文件处理结束................");
+                Console.WriteLine("文件处理结束................");
+            }            
         }
 
         //2.增量分装区块链文件
@@ -121,7 +125,7 @@ namespace BitcoinUtxoSlice
                             {
                                 Console.WriteLine(dirInfo.Name + ":" + blocks.Count);
                             }
-                            File.AppendAllText(blockFileDestinationPath + "\\blockFileCount.txt", dirInfo.Name + "_" + blocks.Count + "||");
+                            File.AppendAllText(blockFileDestinationPath + "\\blockFileCount.txt", dirInfo.Name + "_" + blocks.Count + "|");
                             Console.WriteLine(dirInfo.Name + "中的区块数量记录完成");
                         }
                         else
@@ -167,7 +171,7 @@ namespace BitcoinUtxoSlice
                                 {
                                     Console.WriteLine(dirInfo.Name + ":" + blocks.Count);
                                 }
-                                File.AppendAllText(blockFileDestinationPath + "\\blockFileCount.txt", dirInfo.Name + "_" + blocks.Count + "||");
+                                File.AppendAllText(blockFileDestinationPath + "\\blockFileCount.txt", dirInfo.Name + "_" + blocks.Count + "|");
                             }
                         }
                     }
@@ -201,7 +205,7 @@ namespace BitcoinUtxoSlice
         public void get_totalcount()
         {
             string recordStr = File.ReadAllText(blockFileDestinationPath + "\\blockFileCount.txt");
-            string[] recordsList = recordStr.Split("||");
+            string[] recordsList = recordStr.Split("|");
             int totalBlock = 0;
             for (int i = 0; i < recordsList.Length - 1; i++)
             {
@@ -218,7 +222,7 @@ namespace BitcoinUtxoSlice
         public bool get_lastrecord_foldernumber(out int folderNumber)
         {
             string recordStr = File.ReadAllText(blockFileDestinationPath + "\\blockFileCount.txt");
-            string[] recordsList = recordStr.Split("||");
+            string[] recordsList = recordStr.Split("|");
             if (recordsList.Length != 0)
             {
                 string recordItem = recordsList[recordsList.Length - 2];

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BitcoinUtxoSlice
 {
-    class Test_Class
+    public class Test_Class
     {
         public void sameTransaction_Test()
         {

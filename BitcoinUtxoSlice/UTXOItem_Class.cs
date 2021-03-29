@@ -4,12 +4,13 @@ using System.Text;
 
 namespace BitcoinUtxoSlice
 {
-    class UTXOItem_Class
+    public class UTXOItem_Class
     {
         public string txhash;
         public uint index;
         public ulong value;
         public string script;
+        public int utxoItemAmount = 1;
 
         public UTXOItem_Class() { }
 

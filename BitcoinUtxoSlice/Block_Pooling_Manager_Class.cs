@@ -6,12 +6,12 @@ using System.Text;
 
 namespace BitcoinUtxoSlice
 {
-    class Block_Pooling_Manager_Class
+    public class Block_Pooling_Manager_Class
     {
         public List<Block> blockReadBlocksFromFile = new List<Block>();
         public Queue<Block> blockQueuePooling = new Queue<Block>();
-        public List<string> forkedBlockList = new List<string>();
-        public List<string> orphanBlockList = new List<string>();
+        public List<string> forkedBlockList = new List<string>();//(正在修改.....)
+        public List<string> orphanBlockList = new List<string>();//(正在修改.....)
         public List<int> blockCountOfFile = new List<int>();
         public Block blockQueueTailElement;
         public Block lastProcessedBlockElement;
@@ -201,6 +201,7 @@ namespace BitcoinUtxoSlice
                         tempBlockQueuePooling.Enqueue(blockQueuePooling.Dequeue());
                     }
                     forkedBlockList.Add(blockQueuePooling.Dequeue().BlockHeader.BlockHash.ToString());//向分叉块列表中添加分叉上的块
+                    Console.WriteLine("出现分叉上的块");
                     blockQueuePooling.Clear();
                     for (int j = 0; j < tempBlockQueuePooling.Count; j++)
                     {
