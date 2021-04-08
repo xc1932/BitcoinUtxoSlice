@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitcoinApplication", "BitcoinApplication.csproj", "{47719B27-1AEB-4BF0-BD3E-5F3E5E53B22D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitcoinUTXOSliceLibrary", "..\BitcoinUTXOSliceLibrary\BitcoinUTXOSliceLibrary.csproj", "{D2CD22DD-4A00-46C2-8E1E-0353BE524698}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderedBlockchainParser", "..\OrderedBlockchainParser\OrderedBlockchainParser.csproj", "{39A28EC6-275A-4269-979E-BB6CF0F8B594}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UTXOSlicer", "..\UTXOSlicer\UTXOSlicer.csproj", "{BC4BE070-160C-49F9-9FFF-93923E11D768}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47719B27-1AEB-4BF0-BD3E-5F3E5E53B22D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47719B27-1AEB-4BF0-BD3E-5F3E5E53B22D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47719B27-1AEB-4BF0-BD3E-5F3E5E53B22D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47719B27-1AEB-4BF0-BD3E-5F3E5E53B22D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2CD22DD-4A00-46C2-8E1E-0353BE524698}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2CD22DD-4A00-46C2-8E1E-0353BE524698}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2CD22DD-4A00-46C2-8E1E-0353BE524698}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2CD22DD-4A00-46C2-8E1E-0353BE524698}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39A28EC6-275A-4269-979E-BB6CF0F8B594}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39A28EC6-275A-4269-979E-BB6CF0F8B594}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39A28EC6-275A-4269-979E-BB6CF0F8B594}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39A28EC6-275A-4269-979E-BB6CF0F8B594}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC4BE070-160C-49F9-9FFF-93923E11D768}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC4BE070-160C-49F9-9FFF-93923E11D768}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC4BE070-160C-49F9-9FFF-93923E11D768}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC4BE070-160C-49F9-9FFF-93923E11D768}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {53567EBF-4A69-4562-B0A4-5A1F1C6F47E3}
+	EndGlobalSection
+EndGlobal

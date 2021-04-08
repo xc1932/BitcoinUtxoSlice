@@ -13,13 +13,15 @@ namespace BitcoinUTXOSliceLibrary
     {
         public Dictionary<string, UTXOItem_Class> utxoDictionary = new Dictionary<string, UTXOItem_Class>();
         public List<FileStatusItem_Class> fileStatusList = new List<FileStatusItem_Class>();
+        public LinkedList<opreturnOutputItem_Class> opreturnOutputLinkedList = new LinkedList<opreturnOutputItem_Class>();
         Blockfile_Manager_Class blockfileManagerObject = new Blockfile_Manager_Class();
         string utxoSliceFileLocationPath = Configuration_Class.sliceStateFilePath;
+        string opreturnOutputsFileFileLocationPath = Configuration_Class.opreturnOutputFilePath;
         public int processedBlockAmount = 0;
         public int sliceFileAmount = 0;
         public int sameTransactionCount = 0;
         ////I.初次启动
-        public void initial_Run()
+        public void initial_Run(bool opreturnStore)
         {
             if (!Directory.Exists(utxoSliceFileLocationPath))
             {
@@ -38,7 +40,7 @@ namespace BitcoinUTXOSliceLibrary
             Block readyBlock;
             while ((readyBlock = bpmc.dequeue_FromBlockQueuePooling()) != null)
             {
-                execute_TransactionsOfOneBlock(readyBlock);
+                execute_TransactionsOfOneBlock(readyBlock, opreturnStore);
                 processedBlockAmount++;
                 bool successMark = bpmc.enqueue_ToBlockQueuePooling();
                 if (!successMark)
@@ -49,9 +51,17 @@ namespace BitcoinUTXOSliceLibrary
                 if (processedBlockAmount % Configuration_Class.UTXOSliceLength == 0)
                 {
                     sliceFileAmount++;
+                    //保存UTXO切片
                     Console.WriteLine("正在保存第" + (int)(processedBlockAmount / Configuration_Class.UTXOSliceLength) + "个切片状态,请勿现在终止程序..........");
                     save_SliceFile(utxoSliceFileLocationPath + "\\" + processedBlockAmount + "_" + readyBlock.BlockHeader.BlockTimestamp.ToString("yyyy年MM月dd日HH时mm分ss秒") + ".txt", bpmc, processedBlockAmount, sliceFileAmount);
-                    Console.WriteLine("切片保存完成");
+                    Console.WriteLine("UTXO切片保存完成");
+                    if (opreturnStore)
+                    {
+                        //保存opreturn切片
+                        Console.WriteLine("正在保存第" + (int)(processedBlockAmount / Configuration_Class.UTXOSliceLength) + "个opreturn切片状态,请勿现在终止程序..........");
+                        save_opreturnOutputsFile(opreturnOutputsFileFileLocationPath + "\\" + processedBlockAmount + "_" + readyBlock.BlockHeader.BlockTimestamp.ToString("yyyy年MM月dd日HH时mm分ss秒") + ".txt");
+                        Console.WriteLine("opreturn切片保存完成");
+                    }
                 }
                 if (processedBlockAmount % 100 == 0)
                 {
@@ -64,7 +74,7 @@ namespace BitcoinUTXOSliceLibrary
         }
 
         ////II.增量处理
-        public void restart()
+        public void restart(bool opreturnStore)
         {
             if (!Directory.Exists(utxoSliceFileLocationPath))
             {
@@ -84,7 +94,7 @@ namespace BitcoinUTXOSliceLibrary
                 timer1.Start();
                 while ((readyBlock = bpmc.dequeue_FromBlockQueuePooling()) != null)
                 {
-                    execute_TransactionsOfOneBlock(readyBlock);
+                    execute_TransactionsOfOneBlock(readyBlock, opreturnStore);
                     processedBlockAmount++;
                     bool successMark = bpmc.enqueue_ToBlockQueuePooling();
                     if (!successMark)
@@ -96,9 +106,16 @@ namespace BitcoinUTXOSliceLibrary
                     if (processedBlockAmount % Configuration_Class.UTXOSliceLength == 0)
                     {
                         sliceFileAmount++;
+                        //保存UTXO切片
                         Console.WriteLine("正在保存第" + (int)(processedBlockAmount / Configuration_Class.UTXOSliceLength) + "个切片状态,请勿现在终止程序..........");
                         save_SliceFile(utxoSliceFileLocationPath + "\\" + processedBlockAmount + "_" + readyBlock.BlockHeader.BlockTimestamp.ToString("yyyy年MM月dd日HH时mm分ss秒") + ".txt", bpmc, processedBlockAmount, sliceFileAmount);
                         Console.WriteLine("切片保存完成");
+                        if (opreturnStore) {
+                            //保存opreturn切片
+                            Console.WriteLine("正在保存第" + (int)(processedBlockAmount / Configuration_Class.UTXOSliceLength) + "个opreturn切片状态,请勿现在终止程序..........");
+                            save_opreturnOutputsFile(opreturnOutputsFileFileLocationPath + "\\" + processedBlockAmount + "_" + readyBlock.BlockHeader.BlockTimestamp.ToString("yyyy年MM月dd日HH时mm分ss秒") + ".txt");
+                            Console.WriteLine("opreturn切片保存完成");
+                        }                        
                     }
                     if (processedBlockAmount % 100 == 0)
                     {
@@ -116,7 +133,7 @@ namespace BitcoinUTXOSliceLibrary
         }
 
         ////III.处理交易
-        //1.执行铸币交易
+        //1.(修改后重用)执行铸币交易
         public void execute_CoinbaseTransaction(Transaction transaction)
         {
             uint indexOfOutput = 0;
@@ -126,21 +143,44 @@ namespace BitcoinUTXOSliceLibrary
                 string txhash = transaction.TransactionHash.ToString();
                 ulong value = transactionOutput.OutputValueSatoshi;
                 string script = transactionOutput.OutputScript.ToString();
-                UTXOItem_Class unSpentTxOutItem = new UTXOItem_Class(txhash, indexOfOutput, value, script);
-                if (!utxoDictionary.ContainsKey(txhashAndIndex))
+                if (value == 0)
                 {
-                    utxoDictionary.Add(txhashAndIndex, unSpentTxOutItem);
+                    if (transactionOutput.OutputScript.ToArray()[0] == 0x6a || transactionOutput.OutputScript.ToArray()[1] == 0x6a)
+                    {
+                        opreturnOutputItem_Class opreturnOutputItem = new opreturnOutputItem_Class(txhash, indexOfOutput, value, script);
+                        opreturnOutputLinkedList.AddLast(opreturnOutputItem);                        
+                    }
+                    else
+                    {
+                        UTXOItem_Class unSpentTxOutItem = new UTXOItem_Class(txhash, indexOfOutput, value, script);
+                        if (!utxoDictionary.ContainsKey(txhashAndIndex))
+                        {
+                            utxoDictionary.Add(txhashAndIndex, unSpentTxOutItem);
+                        }
+                        else
+                        {
+                            utxoDictionary[txhashAndIndex].utxoItemAmount++;
+                            sameTransactionCount++;
+                        }                        
+                    }
                 }
-                else
-                {
-                    utxoDictionary[txhashAndIndex].utxoItemAmount++;
-                    sameTransactionCount++;
+                else {
+                    UTXOItem_Class unSpentTxOutItem = new UTXOItem_Class(txhash, indexOfOutput, value, script);
+                    if (!utxoDictionary.ContainsKey(txhashAndIndex))
+                    {
+                        utxoDictionary.Add(txhashAndIndex, unSpentTxOutItem);
+                    }
+                    else
+                    {
+                        utxoDictionary[txhashAndIndex].utxoItemAmount++;
+                        sameTransactionCount++;
+                    }                    
                 }
                 indexOfOutput++;
             }
         }
 
-        //2.执行常规交易
+        //2.(修改后重用)执行常规交易
         public void execute_RegularTransaction(Transaction transaction)
         {
             foreach (TransactionInput transactionInput in transaction.Inputs)
@@ -163,7 +203,6 @@ namespace BitcoinUTXOSliceLibrary
                     Console.WriteLine("当前交易中的输入不存在:" + sourceTxhashAndIndex);
                     return;
                 }
-
             }
             uint indexOfOutput = 0;
             foreach (TransactionOutput transactionOutput in transaction.Outputs)
@@ -172,21 +211,45 @@ namespace BitcoinUTXOSliceLibrary
                 string txhash = transaction.TransactionHash.ToString();
                 ulong value = transactionOutput.OutputValueSatoshi;
                 string script = transactionOutput.OutputScript.ToString();
-                UTXOItem_Class unSpentTxOutItem = new UTXOItem_Class(txhash, indexOfOutput, value, script);
-                if (!utxoDictionary.ContainsKey(txhashAndIndex))
+                if (value==0)
                 {
-                    utxoDictionary.Add(txhashAndIndex, unSpentTxOutItem);
+                    if (transactionOutput.OutputScript.ToArray()[0]==0x6a|| transactionOutput.OutputScript.ToArray()[1] == 0x6a)
+                    {
+                        opreturnOutputItem_Class opreturnOutputItem = new opreturnOutputItem_Class(txhash, indexOfOutput, value, script);
+                        opreturnOutputLinkedList.AddLast(opreturnOutputItem);
+                    }
+                    else
+                    {
+                        UTXOItem_Class unSpentTxOutItem = new UTXOItem_Class(txhash, indexOfOutput, value, script);
+                        if (!utxoDictionary.ContainsKey(txhashAndIndex))
+                        {
+                            utxoDictionary.Add(txhashAndIndex, unSpentTxOutItem);
+                        }
+                        else
+                        {
+                            utxoDictionary[txhashAndIndex].utxoItemAmount++;
+                            sameTransactionCount++;
+                        }
+                    }
                 }
-                else
+                else 
                 {
-                    utxoDictionary[txhashAndIndex].utxoItemAmount++;
-                    sameTransactionCount++;
-                }
+                    UTXOItem_Class unSpentTxOutItem = new UTXOItem_Class(txhash, indexOfOutput, value, script);
+                    if (!utxoDictionary.ContainsKey(txhashAndIndex))
+                    {
+                        utxoDictionary.Add(txhashAndIndex, unSpentTxOutItem);
+                    }
+                    else
+                    {
+                        utxoDictionary[txhashAndIndex].utxoItemAmount++;
+                        sameTransactionCount++;
+                    }
+                }                
                 indexOfOutput++;
             }
         }
 
-        //3.判断是铸币交易还是常规交易
+        //3.(弃)(升级库后可以直接判断)判断是铸币交易还是常规交易
         public bool isCoinbaseTransaction(Transaction transaction)
         {
             if (transaction.Inputs.Count == 1 && transaction.Inputs[0].SourceTransactionOutputIndex == uint.MaxValue && transaction.Inputs[0].SourceTransactionHash.IsZeroArray())
@@ -196,7 +259,7 @@ namespace BitcoinUTXOSliceLibrary
             return false;
         }
 
-        //4.验证交易是否合法
+        //4.(修改后重用)验证交易是否合法
         public bool isValidTransaction(Transaction transaction)
         {
             if (!isCoinbaseTransaction(transaction))
@@ -227,8 +290,8 @@ namespace BitcoinUTXOSliceLibrary
             return true;
         }
 
-        //5.执行一个区块的交易
-        public void execute_TransactionsOfOneBlock(Block block)
+        //5.(修改后重用)执行一个区块的交易
+        public void execute_TransactionsOfOneBlock(Block block,bool opreturnStore)
         {
             foreach (Transaction transaction in block.Transactions)
             {
@@ -247,7 +310,7 @@ namespace BitcoinUTXOSliceLibrary
         }
 
         ////IV.恢复程序
-        //1.计算已读区块总数
+        //1.(修改后重用)计算已读区块总数
         public int countOfFileBlock(List<int> blockCountOfFile)
         {
             int totalAmount = 0;
@@ -258,7 +321,7 @@ namespace BitcoinUTXOSliceLibrary
             return totalAmount;
         }
 
-        //2..判断是否有时间切片并返回最近的时间切片
+        //2.(弃)判断是否有时间切片并返回最近的时间切片
         public bool exist_TimeingSlice(string sliceFileLocationPath, out string recentlySliceFilePath)
         {
             recentlySliceFilePath = null;
@@ -323,7 +386,7 @@ namespace BitcoinUTXOSliceLibrary
             return true;
         }
 
-        //3.从最近的时间切片恢复程序状态(正在修改.....)
+        //3.(修改后重用)从最近的时间切片恢复程序状态(正在修改.....)
         public bool restore_StatusForProgram(Block_Pooling_Manager_Class blockPoolingManagerObject)
         {
             string recentlySliceFilePath = "";
@@ -393,7 +456,7 @@ namespace BitcoinUTXOSliceLibrary
             return true;
         }
 
-        //4.恢复区块池(blockReadBlocksFromFile)
+        //4.(修改后重用)恢复区块池(blockReadBlocksFromFile)
         public void restore_blockReadBlocksFromFile(SliceFileItem_Class sliceFileItemObject, Block_Pooling_Manager_Class blockPoolingManagerObject)
         {
             foreach (FileStatusItem_Class fileStatusItemObject in sliceFileItemObject.fileStatusList)
@@ -424,7 +487,7 @@ namespace BitcoinUTXOSliceLibrary
             }
         }
 
-        //5.恢复队首区块
+        //5.(修改后重用)恢复队首区块
         public Block restore_QueueHeaderBlock(string lastProcessedBlockHash, Block_Pooling_Manager_Class blockPoolingManagerObject)
         {
             foreach (Block block in blockPoolingManagerObject.blockReadBlocksFromFile)
@@ -441,7 +504,7 @@ namespace BitcoinUTXOSliceLibrary
         }
 
         ////V.其它
-        //1.获取创世区块
+        //1.(修改后重用)获取创世区块
         public Block get_GenesisBlock()
         {
             //获取创世块
@@ -457,7 +520,7 @@ namespace BitcoinUTXOSliceLibrary
             return genesisBlock;
         }
 
-        //2.保存切片状态(正在修改.....)
+        //2.(修改后重用)保存切片状态
         public void save_SliceFile(string sliceFilePath, Block_Pooling_Manager_Class blockPoolingManagerObject, int processedBlockAmount, int sliceFileAmount)
         {
             if (countOfFileBlock(blockPoolingManagerObject.blockCountOfFile) != blockPoolingManagerObject.blockReadBlocksFromFile.Count)
@@ -497,7 +560,23 @@ namespace BitcoinUTXOSliceLibrary
             }
         }
 
-        //3.统计记录孤块
+        //3.(修改后重用)保存opreturn切片状态
+        public void save_opreturnOutputsFile(string opreturnOutputsFileFilePath) {
+            if (!Directory.Exists(Configuration_Class.opreturnOutputFilePath))
+            {
+                Console.WriteLine("opreturn切片文件保存路径不存在");
+                Directory.CreateDirectory(Configuration_Class.opreturnOutputFilePath);
+                Console.WriteLine("opreturn切片文件保存路径已经自动创建");
+            }
+            using (StreamWriter sw = File.CreateText(opreturnOutputsFileFilePath))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(sw, opreturnOutputLinkedList);
+            }
+            opreturnOutputLinkedList = new LinkedList<opreturnOutputItem_Class>();
+        }
+
+        //4.(修改后重用)统计记录孤块
         public void record_OrphanBlock(Block_Pooling_Manager_Class blockPoolingManagerObject)
         {
             for (int i = 0; i < blockPoolingManagerObject.blockReadBlocksFromFile.Count; i++)
@@ -515,7 +594,7 @@ namespace BitcoinUTXOSliceLibrary
             }
         }
 
-        //4.处理测试
+        //5.处理测试
         public void virtual_BlockProcessing(Block readyBlock, int processedBlockAmount)
         {
             Console.WriteLine("正在处理第" + processedBlockAmount + "个区块..............");

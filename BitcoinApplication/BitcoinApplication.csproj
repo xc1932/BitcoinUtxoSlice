@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BitcoinUTXOSliceLibrary\BitcoinUTXOSliceLibrary.csproj" />
+    <ProjectReference Include="..\OrderedBlockchainParser\OrderedBlockchainParser.csproj" />
+    <ProjectReference Include="..\UTXOSlicer\UTXOSlicer.csproj" />
   </ItemGroup>
 
 </Project>

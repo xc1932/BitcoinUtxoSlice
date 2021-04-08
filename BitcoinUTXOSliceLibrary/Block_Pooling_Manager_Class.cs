@@ -18,7 +18,7 @@ namespace BitcoinUTXOSliceLibrary
         public int blockReadPointer = 0;
         public int currentLoadFileNumber = -1;
 
-        //1.使用blk00000.dat初始化newlyReadBlocksFromFile中的区块
+        //(已和load_NextFile_ToBlockPooling合并)1.使用blk00000.dat初始化newlyReadBlocksFromFile中的区块
         public void initialize_NewlyReadBlocksFromFile()
         {
             if (blockReadBlocksFromFile.Count == 0 && currentLoadFileNumber == -1)
@@ -32,7 +32,7 @@ namespace BitcoinUTXOSliceLibrary
             }
         }
 
-        //2.加载下一个文件中的区块
+        //2.(修改后重用)加载下一个文件中的区块
         public void load_NextFile_ToBlockPooling()
         {
             Blockfile_Manager_Class blockFileManager = new Blockfile_Manager_Class();
@@ -46,7 +46,7 @@ namespace BitcoinUTXOSliceLibrary
             }
         }
 
-        //3.从区块池中查找下一个区块(正在修改.....)
+        //3.(直接重用)从区块池中查找下一个区块(正在修改.....)
         public bool search_NextBlock(Block priorBlock, out Block nextBlock)
         {
             for (int i = blockReadPointer; i < blockReadBlocksFromFile.Count; i++)
@@ -121,7 +121,7 @@ namespace BitcoinUTXOSliceLibrary
             return false;
         }
 
-        //4.初始化区块队列
+        //4.(直接重用)初始化区块队列
         public void initialize_BlockQueuePooling(Block Genesis)
         {
             Block priorBlock = Genesis;
@@ -145,7 +145,7 @@ namespace BitcoinUTXOSliceLibrary
             }
         }
 
-        //5.从区块队列池中取出一个区块
+        //5.(直接重用)从区块队列池中取出一个区块
         public Block dequeue_FromBlockQueuePooling()
         {
             Block dequeueBlock = null;
@@ -179,7 +179,7 @@ namespace BitcoinUTXOSliceLibrary
             return dequeueBlock;
         }
 
-        //6.向区块队列中补充区块(正在修改.....)
+        //6.(直接重用)向区块队列中补充区块(正在修改.....)
         public bool enqueue_ToBlockQueuePooling()
         {
             int invalidBlockCount = 0;
@@ -201,7 +201,7 @@ namespace BitcoinUTXOSliceLibrary
                         tempBlockQueuePooling.Enqueue(blockQueuePooling.Dequeue());
                     }
                     forkedBlockList.Add(blockQueuePooling.Dequeue().BlockHeader.BlockHash.ToString());//向分叉块列表中添加分叉上的块
-                    Console.WriteLine("出现分叉上的块");
+                    Console.WriteLine("出现分叉上的块,或是即将处理结束！！！");
                     blockQueuePooling.Clear();
                     for (int j = 0; j < tempBlockQueuePooling.Count; j++)
                     {

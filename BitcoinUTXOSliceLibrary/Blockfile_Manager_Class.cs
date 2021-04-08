@@ -27,6 +27,7 @@ namespace BitcoinUTXOSliceLibrary
             this.blockFileDestinationPath = blockFileDestinationPath;
         }
 
+        //(弃)
         //1.将每个区块链文件分装到一个对应编号的文件夹，文件夹下的文件全命名为blk00000.dat
         public void blockfiles_preprocessing(int blockfileNumber)
         {
@@ -64,6 +65,7 @@ namespace BitcoinUTXOSliceLibrary
             }
         }
 
+        //(弃)
         //2.增量分装区块链文件
         public void blockfiles_preprocessing_increment(int blockfileNumber)
         {
@@ -104,6 +106,7 @@ namespace BitcoinUTXOSliceLibrary
             }
         }
 
+        //(改成统计Bitcoin Core 同步数据路径下每个区块文件的区块数量)
         //3.统计分装路径下每个区块文件的区块数量
         public void get_blockfiles_count(bool printInfoMark)
         {
@@ -147,6 +150,7 @@ namespace BitcoinUTXOSliceLibrary
             Console.WriteLine("执行结束");
         }
 
+        //(改成增量统计Bitcoin Core 同步数据路径下每个区块文件的区块数量)
         //4.增量统计分装路径下每个区块文件的区块数量(待改)
         public void get_blockfiles_count_increment(bool printInfoMark)
         {
@@ -192,6 +196,7 @@ namespace BitcoinUTXOSliceLibrary
             }
         }
 
+        //(弃)(可以直接读取一个文件)
         //5.读取一个编号blk*****文件夹下的blk00000.dat文件
         public List<Block> load_one_blockfile(string blockFilePath)
         {
@@ -202,6 +207,7 @@ namespace BitcoinUTXOSliceLibrary
             return oneFileBlockData;
         }
 
+        //(改进)
         //6.统计blockFileCount.txt文件中记录的区块总数
         public void get_totalcount()
         {
@@ -219,6 +225,7 @@ namespace BitcoinUTXOSliceLibrary
             Console.WriteLine("total amount:" + totalBlock);
         }
 
+        //(改进)
         //a.获取blockFileCount.txt中最后统计的区块文件编号
         public bool get_lastrecord_foldernumber(out int folderNumber)
         {
@@ -239,6 +246,7 @@ namespace BitcoinUTXOSliceLibrary
             }
         }
 
+        //(改进)
         //b.获取最大文件夹高度
         public bool get_maxheight_blkfolder(out int maxHeight)
         {
@@ -297,6 +305,7 @@ namespace BitcoinUTXOSliceLibrary
             return true;
         }
 
+        //(改进)
         //c.给出dat文件序号，返回文件名
         public string get_filename(int number)
         {
